@@ -16,9 +16,9 @@ const ProductScreen = () => {
           style={{ boxShadow: "none", background: "#DCEBF3", borderRadius: 20 }}
         />
         <div style={{ marginTop: 30, height: "100%", overflowY: "auto" }}>
+          <ProductItem itemName="Keropok" selected={true}/>
           <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
+          <ProductItem itemName="Keropok" selected={true} />
           <ProductItem itemName="Keropok" />
           <ProductItem itemName="Keropok" />
           <ProductItem itemName="Keropok" />

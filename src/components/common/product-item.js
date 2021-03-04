@@ -5,10 +5,21 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(() => ({
-  container: {
+  containerNormal: {
     display: "flex",
     flexDirection: "row",
     background: "#DCEBF3",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    cursor: "pointer",
+    marginBottom: 10,
+    marginRight: 5,
+  },
+  containerSelected: {
+    display: "flex",
+    flexDirection: "row",
+    background: "black",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -24,30 +35,55 @@ const useStyles = makeStyles(() => ({
   editButton: {
     marginRight: 3,
     borderStyle: "solid",
-    borderWidth: 1,
+    borderWidth: 2,
+    borderColor: "white",
+    color: "white",
+    height: 40,
+    width: 40,
   },
   deleteButton: {
     marginLeft: 3,
     borderStyle: "solid",
-    borderWidth: 1,
+    borderWidth: 2,
+    borderColor: "white",
+    color: "white",
+    height: 40,
+    width: 40,
+  },
+  itemName: {
+    flex: 1,
+    fontWeight: "bold",
+  },
+  itemNameSelected: {
+    flex: 1,
+    fontWeight: "bold",
+    color: "white",
   },
 }));
 
-const ProductItem = ({ itemName }) => {
+const ProductItem = ({ itemName, selected }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
+    <div
+      className={selected ? classes.containerSelected : classes.containerNormal}
+    >
       <Avatar className={classes.avatar}>{itemName[0]}</Avatar>
-      <Typography style={{ flex: 1, fontWeight: "bold" }}>
+      <Typography
+        className={selected ? classes.itemNameSelected : classes.itemName}
+      >
         {itemName}
       </Typography>
-      <IconButton className={classes.editButton}>
-        <EditIcon />
-      </IconButton>
-      <IconButton className={classes.deleteButton}>
-        <DeleteIcon />
-      </IconButton>
+      {selected ? (
+        <>
+          <IconButton className={classes.editButton}>
+            <EditIcon />
+          </IconButton>
+          <IconButton className={classes.deleteButton}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ) : null}
     </div>
   );
 };
