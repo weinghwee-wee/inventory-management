@@ -16,7 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { ProductScreen } from "./index";
+import { ProductScreen, OrderScreen } from "./index";
 
 const drawerWidth = 240;
 
@@ -81,6 +81,16 @@ function MainScreen(props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const renderContent = () => {
+    if (selectedScreen == "Products") {
+      return <ProductScreen />;
+    } else if (selectedScreen == "Orders") {
+      return <OrderScreen />;
+    } else {
+      return null;
+    }
   };
 
   const screens = [
@@ -184,7 +194,7 @@ function MainScreen(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <ProductScreen />
+        {renderContent()}
       </main>
     </div>
   );
