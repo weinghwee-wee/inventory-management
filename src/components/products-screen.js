@@ -1,22 +1,13 @@
-import React, { useState } from "react";
-import {
-  TextField,
-  Typography,
-  Avatar,
-  IconButton,
-  CardMedia,
-} from "@material-ui/core";
+import React from "react";
+import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchBar from "material-ui-search-bar";
 import { ProductItem } from "./common";
 import logo from "../saltedegg.jpg";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,10 +26,14 @@ const useStyles = makeStyles((theme) => ({
     flex: 5,
     background: "#DCEBF3",
     padding: 50,
-    borderRadius: 5,
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
+    flexDirection: "column",
+  },
+  rightContainer: {
+    display: "flex",
+    width: "100%",
   },
   infoContainer: {
     flex: 1,
@@ -49,8 +44,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   imageContainer: {
-    width: 250,
-    height: 250,
+    marginLeft: 10,
+    width: 200,
+    height: 200,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -60,8 +56,61 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   tableCell: { background: "yellow" },
+  button: {
+    textTransform: "none",
+    background: "gold",
+    width: 150,
+    padding: 10,
+    fontSize: 15,
+    fontWeight: "bold",
+    "&:hover": {
+      background: "gold",
+    },
+  },
+  paper: {
+    width: "100%",
+    textAlign: "center",
+    width: "30%",
+    padding: 10,
+  },
+  detailsPaper: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  divider: {
+    width: "95%",
+  },
+  detailsContainer: {
+    display: "flex",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  description: {
+    fontWeight: "bolder",
+  },
+  titleContainer: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+  },
 }));
 
+const ProductDetail = ({ title, description }) => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.paper}>
+      <Typography variant="overline">{title}</Typography>
+      <Typography variant="subtitle1" className={classes.description}>
+        {description}
+      </Typography>
+    </div>
+  );
+};
 const ProductScreen = () => {
   const classes = useStyles();
 
@@ -79,25 +128,16 @@ const ProductScreen = () => {
         </div>
       </div>
       <div className={classes.right}>
-        <>
-          <div className={classes.infoContainer}>
+        <div className={classes.rightContainer}>
+          <div className={classes.titleContainer}>
             <Typography variant="h4">Keropok</Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableRow>
-                  <TableCell variant="head" className={classes.tableCell}>
-                    Purchase Price (RM per unit):
-                  </TableCell>
-                  <TableCell>17</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell variant="head" className={classes.tableCell}>
-                    Sell Price (RM per unit):{" "}
-                  </TableCell>
-                  <TableCell>20</TableCell>
-                </TableRow>
-              </Table>
-            </TableContainer>
+            <Button
+              endIcon={<AirportShuttleIcon />}
+              className={classes.button}
+              variant="contained"
+            >
+              Restock
+            </Button>
           </div>
           <div className={classes.imageContainer}>
             <img
@@ -106,7 +146,20 @@ const ProductScreen = () => {
               src={logo}
             />
           </div>
-        </>
+        </div>
+        <Paper className={classes.detailsPaper}>
+          <div className={classes.detailsContainer}>
+            <ProductDetail title="buy price" description="15" />
+            <ProductDetail title="sell price" description="15" />
+            <ProductDetail title="stock" description="15" />
+          </div>
+          <Divider className={classes.divider} />
+          <div className={classes.detailsContainer}>
+            <ProductDetail title="unit sold" description="15" />
+            <ProductDetail title="total unit" description="15" />
+            <ProductDetail title="" description="" />
+          </div>
+        </Paper>
       </div>
     </div>
   );
