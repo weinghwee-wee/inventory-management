@@ -12,6 +12,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import { CustomTooltip } from "./common";
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -105,6 +106,7 @@ const OrderScreen = () => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [addOrderModal, setAddOrderModal] = useState(false);
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -120,6 +122,7 @@ const OrderScreen = () => {
 
   return (
     <div className={classes.container}>
+      <CustomTooltip title="Add Order" onClick={setAddOrderModal} />
       <TableContainer style={{ boxShadow: "none" }} component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <colgroup>

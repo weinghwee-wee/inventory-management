@@ -8,10 +8,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import Divider from "@material-ui/core/Divider";
-import AddIcon from "@material-ui/icons/Add";
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
 import { AddProductModal, RestockModal } from "./modals";
+import { CustomTooltip } from "./common";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -101,11 +99,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-around",
   },
-  absolute: {
-    position: "absolute",
-    right: 15,
-    bottom: 10,
-  },
   uploadContainer: { marginTop: 10, display: "flex", alignItems: "center" },
 }));
 
@@ -134,16 +127,7 @@ const ProductScreen = () => {
         setVisible={setAddProductModal}
       />
       <RestockModal visible={restockModal} setVisible={setRestockModal} />
-      <Tooltip
-        title="Add product"
-        onClick={() => {
-          setAddProductModal(true);
-        }}
-      >
-        <Fab color="primary" className={classes.absolute}>
-          <AddIcon />
-        </Fab>
-      </Tooltip>
+      <CustomTooltip title="Add Product" onClick={setAddProductModal} />
       <div className={classes.left}>
         <SearchBar className={classes.searchBar} />
         <div className={classes.itemContainer}>
