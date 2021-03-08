@@ -1,5 +1,5 @@
-import React from "react";
-import { Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchBar from "material-ui-search-bar";
 import { ProductItem } from "./common";
@@ -8,6 +8,10 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import Divider from "@material-ui/core/Divider";
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/Tooltip";
+import { AddProductModal, RestockModal } from "./modals";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -21,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
   },
   searchBar: { boxShadow: "none", background: "#DCEBF3", borderRadius: 20 },
-  itemContainer: { marginTop: 30, height: "100%", overflowY: "auto" },
+  itemContainer: { marginTop: 30, height: 430, overflowY: "auto" },
   right: {
     flex: 5,
     background: "#DCEBF3",
@@ -97,6 +101,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-around",
   },
+  absolute: {
+    position: "absolute",
+    right: 15,
+    bottom: 10,
+  },
+  uploadContainer: { marginTop: 10, display: "flex", alignItems: "center" },
 }));
 
 const ProductDetail = ({ title, description }) => {
@@ -114,14 +124,38 @@ const ProductDetail = ({ title, description }) => {
 const ProductScreen = () => {
   const classes = useStyles();
 
+  const [addProductModal, setAddProductModal] = useState(false);
+  const [restockModal, setRestockModal] = useState(false);
+
   return (
     <div className={classes.container}>
+      <AddProductModal
+        visible={addProductModal}
+        setVisible={setAddProductModal}
+      />
+      <RestockModal visible={restockModal} setVisible={setRestockModal} />
+      <Tooltip
+        title="Add product"
+        onClick={() => {
+          setAddProductModal(true);
+        }}
+      >
+        <Fab color="primary" className={classes.absolute}>
+          <AddIcon />
+        </Fab>
+      </Tooltip>
       <div className={classes.left}>
         <SearchBar className={classes.searchBar} />
         <div className={classes.itemContainer}>
           <ProductItem itemName="Keropok" selected={true} />
           <ProductItem itemName="Keropok" />
           <ProductItem itemName="Keropok" selected={true} />
+          <ProductItem itemName="Keropok" />
+          <ProductItem itemName="Keropok" />
+          <ProductItem itemName="Keropok" />
+          <ProductItem itemName="Keropok" />
+          <ProductItem itemName="Keropok" />
+          <ProductItem itemName="Keropok" />
           <ProductItem itemName="Keropok" />
           <ProductItem itemName="Keropok" />
           <ProductItem itemName="Keropok" />
@@ -135,6 +169,9 @@ const ProductScreen = () => {
               endIcon={<AirportShuttleIcon />}
               className={classes.button}
               variant="contained"
+              onClick={() => {
+                setRestockModal(true);
+              }}
             >
               Restock
             </Button>
