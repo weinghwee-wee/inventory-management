@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import { CustomTooltip } from "./common";
+import { AddOrderModal } from "./modals";
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -122,6 +123,7 @@ const OrderScreen = () => {
 
   return (
     <div className={classes.container}>
+      <AddOrderModal visible={addOrderModal} setVisible={setAddOrderModal} />
       <CustomTooltip title="Add Order" onClick={setAddOrderModal} />
       <TableContainer style={{ boxShadow: "none" }} component={Paper}>
         <Table className={classes.table} aria-label="customized table">
