@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchBar from "material-ui-search-bar";
 import { ProductItem } from "./common";
-import logo from "../saltedegg.jpg";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import Divider from "@material-ui/core/Divider";
 import { AddProductModal, RestockModal } from "./modals";
 import { CustomTooltip } from "./common";
+import { createProduct, getProducts } from "../api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -114,11 +114,42 @@ const ProductDetail = ({ title, description }) => {
     </div>
   );
 };
+
 const ProductScreen = () => {
   const classes = useStyles();
 
+  const [selectedProduct, setSelectedProduct] = useState({});
+  const [products, setProducts] = useState([]);
   const [addProductModal, setAddProductModal] = useState(false);
   const [restockModal, setRestockModal] = useState(false);
+
+  const {
+    name,
+    image,
+    sellPrice,
+    buyPrice,
+    availableStock,
+    totalSold,
+  } = selectedProduct;
+
+  const fetchProduct = async (text) => {
+    const products = await getProducts(text);
+
+    const { result } = products;
+
+    if (result) {
+      setProducts(result);
+    }
+  };
+
+  const onSearch = async (name) => {
+    setSelectedProduct({});
+    await fetchProduct(name);
+  };
+
+  useEffect(() => {
+    fetchProduct("");
+  }, []);
 
   return (
     <div className={classes.container}>
@@ -129,58 +160,69 @@ const ProductScreen = () => {
       <RestockModal visible={restockModal} setVisible={setRestockModal} />
       <CustomTooltip title="Add Product" onClick={setAddProductModal} />
       <div className={classes.left}>
-        <SearchBar className={classes.searchBar} />
+        <SearchBar
+          className={classes.searchBar}
+          onChange={(value) => {
+            onSearch(value);
+          }}
+          onCancelSearch={() => {
+            fetchProduct("");
+          }}
+        />
         <div className={classes.itemContainer}>
-          <ProductItem itemName="Keropok" selected={true} />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" selected={true} />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
-          <ProductItem itemName="Keropok" />
+          {products.map((product) => (
+            <ProductItem
+              key={product._id}
+              itemName={product.name}
+              onClick={() => setSelectedProduct(product)}
+              selected={selectedProduct.name === product.name}
+            />
+          ))}
         </div>
       </div>
       <div className={classes.right}>
-        <div className={classes.rightContainer}>
-          <div className={classes.titleContainer}>
-            <Typography variant="h4">Keropok</Typography>
-            <Button
-              endIcon={<AirportShuttleIcon />}
-              className={classes.button}
-              variant="contained"
-              onClick={() => {
-                setRestockModal(true);
-              }}
-            >
-              Restock
-            </Button>
-          </div>
-          <div className={classes.imageContainer}>
-            <img
-              className={classes.image}
-              alt="Contemplative Reptile"
-              src={logo}
-            />
-          </div>
-        </div>
-        <Paper className={classes.detailsPaper}>
-          <div className={classes.detailsContainer}>
-            <ProductDetail title="buy price" description="15" />
-            <ProductDetail title="sell price" description="15" />
-            <ProductDetail title="stock" description="15" />
-          </div>
-          <Divider className={classes.divider} />
-          <div className={classes.detailsContainer}>
-            <ProductDetail title="unit sold" description="15" />
-            <ProductDetail title="total unit" description="15" />
-            <ProductDetail title="" description="" />
-          </div>
-        </Paper>
+        {selectedProduct.name ? (
+          <>
+            <div className={classes.rightContainer}>
+              <div className={classes.titleContainer}>
+                <Typography variant="h4">{name}</Typography>
+                <Button
+                  endIcon={<AirportShuttleIcon />}
+                  className={classes.button}
+                  variant="contained"
+                  onClick={() => {
+                    setRestockModal(true);
+                  }}
+                >
+                  Restock
+                </Button>
+              </div>
+              <div className={classes.imageContainer}>
+                <img
+                  className={classes.image}
+                  alt="Contemplative Reptile"
+                  src={image}
+                />
+              </div>
+            </div>
+            <Paper className={classes.detailsPaper}>
+              <div className={classes.detailsContainer}>
+                <ProductDetail title="buy price" description={buyPrice} />
+                <ProductDetail title="sell price" description={sellPrice} />
+                <ProductDetail title="stock" description={availableStock} />
+              </div>
+              <Divider className={classes.divider} />
+              <div className={classes.detailsContainer}>
+                <ProductDetail title="unit sold" description={totalSold} />
+                <ProductDetail
+                  title="total unit"
+                  description={availableStock + totalSold}
+                />
+                <ProductDetail title="" description="" />
+              </div>
+            </Paper>
+          </>
+        ) : null}
       </div>
     </div>
   );

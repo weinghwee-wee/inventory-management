@@ -19,7 +19,7 @@ export const createProduct = async (
 };
 
 export const getProducts = async (name) => {
-  const result = await axiosInstance.get("/products", { name });
+  const result = await axiosInstance.get("/products", { params: { name } });
 
   return result.data;
 };

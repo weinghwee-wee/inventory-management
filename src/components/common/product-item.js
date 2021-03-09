@@ -33,6 +33,7 @@ const useStyles = makeStyles(() => ({
     marginRight: 15,
   },
   editButton: {
+    marginLeft: 6,
     marginRight: 3,
     borderStyle: "solid",
     borderWidth: 2,
@@ -61,12 +62,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ProductItem = ({ itemName, selected }) => {
+const ProductItem = ({ onClick, itemName, selected }) => {
   const classes = useStyles();
 
   return (
     <div
       className={selected ? classes.containerSelected : classes.containerNormal}
+      onClick={onClick}
     >
       <Avatar className={classes.avatar}>{itemName[0]}</Avatar>
       <Typography
