@@ -199,7 +199,7 @@ const ProductScreen = () => {
             <ProductItem
               key={product._id}
               itemName={product.name}
-              selected={selectedProduct.name === product.name}
+              selected={selectedProduct._id === product._id}
               onClick={() => setSelectedProduct(product)}
               onDelete={onDeleteProduct}
             />
