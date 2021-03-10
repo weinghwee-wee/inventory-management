@@ -3,15 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import dotenv from "dotenv";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { Modal } from "./components/common";
 
-require('dotenv').config()
+require("dotenv").config();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
+      <Modal />
       <App />
     </Provider>
   </React.StrictMode>,

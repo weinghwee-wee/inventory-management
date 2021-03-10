@@ -62,7 +62,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ProductItem = ({ onClick, itemName, selected }) => {
+const ProductItem = ({ onDelete, onClick, itemName, selected }) => {
   const classes = useStyles();
 
   return (
@@ -81,7 +81,7 @@ const ProductItem = ({ onClick, itemName, selected }) => {
           <IconButton className={classes.editButton}>
             <EditIcon />
           </IconButton>
-          <IconButton className={classes.deleteButton}>
+          <IconButton className={classes.deleteButton} onClick={onDelete}>
             <DeleteIcon />
           </IconButton>
         </>

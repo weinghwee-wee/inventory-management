@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -8,14 +9,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { createProduct } from "../../api";
-import { uploadFile, deleteFile } from "../../firebase/firebase-utils";
+import { uploadFile } from "../../firebase/firebase-utils";
+import { showModalAction } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   uploadContainer: { marginTop: 10, display: "flex", alignItems: "center" },
 }));
 
 const AddProductModal = ({ visible, setVisible }) => {
-  console.log("here2")
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [name, setName] = useState("");
   const [sellPrice, setSellPrice] = useState(0.0);
@@ -33,6 +35,15 @@ const AddProductModal = ({ visible, setVisible }) => {
       sellPrice,
       buyPrice,
       availableStock
+    );
+
+    dispatch(
+      showModalAction(
+        "Successfully Added Product",
+        `${name} is successfully added to the list.`,
+        null,
+        "Close"
+      )
     );
 
     closeModal();

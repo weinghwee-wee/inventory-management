@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch } from "react-redux";
 import SearchBar from "material-ui-search-bar";
 import { ProductItem } from "./common";
 import Paper from "@material-ui/core/Paper";
@@ -9,7 +10,8 @@ import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import Divider from "@material-ui/core/Divider";
 import { AddProductModal, RestockModal } from "./modals";
 import { CustomTooltip } from "./common";
-import { getProducts } from "../api";
+import { getProducts, deleteProduct } from "../api";
+import { showModalAction } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -118,6 +120,7 @@ const ProductDetail = ({ title, description }) => {
 
 const ProductScreen = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [selectedProduct, setSelectedProduct] = useState({});
   const [products, setProducts] = useState([]);
@@ -148,6 +151,27 @@ const ProductScreen = () => {
     await fetchProduct(name);
   };
 
+  const onDeleteProduct = async () => {
+    dispatch(
+      showModalAction(
+        `Delete ${name}`,
+        `Are you sure you want to delete ${name} from your list?`,
+        "Delete",
+        "Cancel",
+        async () => {
+          await deleteProduct(selectedProduct._id);
+
+          const filteredProducts = products.filter(
+            (product) => product._id !== selectedProduct._id
+          );
+
+          setSelectedProduct({});
+          setProducts(filteredProducts);
+        }
+      )
+    );
+  };
+
   useEffect(() => {
     fetchProduct("");
   }, [addProductModal]);
@@ -175,8 +199,9 @@ const ProductScreen = () => {
             <ProductItem
               key={product._id}
               itemName={product.name}
-              onClick={() => setSelectedProduct(product)}
               selected={selectedProduct.name === product.name}
+              onClick={() => setSelectedProduct(product)}
+              onDelete={onDeleteProduct}
             />
           ))}
         </div>

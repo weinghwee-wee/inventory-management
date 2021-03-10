@@ -25,3 +25,9 @@ export const getProducts = async (name) => {
 
   return result.data;
 };
+
+export const deleteProduct = async (id) => {
+  const result = await axiosInstance.delete(`/product/${id}`);
+
+  return result.data;
+}
