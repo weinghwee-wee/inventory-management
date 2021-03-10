@@ -10,8 +10,11 @@ const firebaseConfig = {
   storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
 };
 
-
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}else {
+  firebase.app(); // if already initialized, use that one
+}
 
 // Get a reference to the storage service, which is used to create references in your storage bucket
 const storage = firebase.storage();
