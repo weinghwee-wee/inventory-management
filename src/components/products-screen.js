@@ -9,7 +9,7 @@ import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import Divider from "@material-ui/core/Divider";
 import { AddProductModal, RestockModal } from "./modals";
 import { CustomTooltip } from "./common";
-import { createProduct, getProducts } from "../api";
+import { getProducts } from "../api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -55,7 +55,8 @@ const useStyles = makeStyles((theme) => ({
     background: "black",
   },
   image: {
-    height: "100%",
+    maxHeight: "100%",
+    maxWidth: "100%",
   },
   tableCell: { background: "yellow" },
   button: {
@@ -125,7 +126,7 @@ const ProductScreen = () => {
 
   const {
     name,
-    image,
+    imageUrl,
     sellPrice,
     buyPrice,
     availableStock,
@@ -149,7 +150,7 @@ const ProductScreen = () => {
 
   useEffect(() => {
     fetchProduct("");
-  }, []);
+  }, [addProductModal]);
 
   return (
     <div className={classes.container}>
@@ -201,7 +202,7 @@ const ProductScreen = () => {
                 <img
                   className={classes.image}
                   alt="Contemplative Reptile"
-                  src={image}
+                  src={imageUrl}
                 />
               </div>
             </div>

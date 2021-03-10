@@ -2,14 +2,16 @@ import axiosInstance from "./axios-instance";
 
 export const createProduct = async (
   name,
-  image,
+  imageName,
+  imageUrl,
   sellPrice,
   buyPrice,
   availableStock
 ) => {
   const result = await axiosInstance.post("/product", {
     name,
-    image,
+    imageName,
+    imageUrl,
     sellPrice,
     buyPrice,
     availableStock,

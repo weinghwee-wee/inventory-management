@@ -7,21 +7,44 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { createProduct } from "../../api";
+import { uploadFile, deleteFile } from "../../firebase/firebase-utils";
 
 const useStyles = makeStyles((theme) => ({
   uploadContainer: { marginTop: 10, display: "flex", alignItems: "center" },
 }));
 
-const AddProductModal = ({visible, setVisible}) => {
+const AddProductModal = ({ visible, setVisible }) => {
+  console.log("here2")
   const classes = useStyles();
-  const [selectedFile, setSelectedFile] = useState("");
+  const [name, setName] = useState("");
+  const [sellPrice, setSellPrice] = useState(0.0);
+  const [buyPrice, setBuyPrice] = useState(0.0);
+  const [availableStock, setAvailableStock] = useState(0);
+  const [selectedFile, setSelectedFile] = useState({});
 
-  const closeModal = () => {
+  const onAdd = async () => {
+    const imageUrl = await uploadFile(selectedFile);
+
+    await createProduct(
+      name,
+      selectedFile.name,
+      imageUrl,
+      sellPrice,
+      buyPrice,
+      availableStock
+    );
+
+    closeModal();
+  };
+
+  const closeModal = async () => {
+    setSelectedFile({});
     setVisible(false);
   };
 
-  const onFileChange = (event) => {
-    setSelectedFile(event.target.files[0].name);
+  const onFileChange = async (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
   return (
@@ -38,24 +61,44 @@ const AddProductModal = ({visible, setVisible}) => {
           margin="dense"
           id="name"
           label="Product Name"
-          type="email"
           fullWidth
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
         />
         <TextField
           autoFocus
           margin="dense"
-          id="name"
+          id="sell"
           label="Sell Price"
-          type="email"
+          type="number"
           fullWidth
+          onChange={(e) => {
+            setSellPrice(e.target.value);
+          }}
         />
         <TextField
           autoFocus
           margin="dense"
-          id="name"
+          id="buy"
           label="Buy Price"
-          type="email"
+          type="number"
           fullWidth
+          onChange={(e) => {
+            setBuyPrice(e.target.value);
+          }}
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          id="stock"
+          label="Available Stock"
+          type="number"
+          inputProps={{ min: "0" }}
+          fullWidth
+          onChange={(e) => {
+            setAvailableStock(e.target.value);
+          }}
         />
         <div className={classes.uploadContainer}>
           <Button
@@ -72,14 +115,14 @@ const AddProductModal = ({visible, setVisible}) => {
               onChange={onFileChange}
             />
           </Button>
-          <Typography>{selectedFile}</Typography>
+          <Typography>{selectedFile.name}</Typography>
         </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={closeModal} color="secondary">
           Cancel
         </Button>
-        <Button onClick={closeModal} color="primary">
+        <Button onClick={onAdd} color="primary">
           Add
         </Button>
       </DialogActions>
