@@ -12,6 +12,7 @@ import { AddProductModal, RestockModal } from "./modals";
 import { CustomTooltip } from "./common";
 import { getProducts, deleteProduct } from "../api";
 import { showModalAction } from "../redux/actions";
+import { deleteFile } from "../firebase/firebase-utils";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -102,7 +103,22 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-around",
   },
-  uploadContainer: { marginTop: 10, display: "flex", alignItems: "center" },
+  uploadContainer: {
+    marginTop: 10,
+    display: "flex",
+    alignItems: "center",
+  },
+  messageConatiner: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    background: "#DCEBF3",
+    borderRadius: 20,
+    padding: 20,
+  },
 }));
 
 const ProductDetail = ({ title, description }) => {
@@ -160,6 +176,7 @@ const ProductScreen = () => {
         "Cancel",
         async () => {
           await deleteProduct(selectedProduct._id);
+          await deleteFile(selectedProduct.imageName);
 
           const filteredProducts = products.filter(
             (product) => product._id !== selectedProduct._id
@@ -195,15 +212,28 @@ const ProductScreen = () => {
           }}
         />
         <div className={classes.itemContainer}>
-          {products.map((product) => (
-            <ProductItem
-              key={product._id}
-              itemName={product.name}
-              selected={selectedProduct._id === product._id}
-              onClick={() => setSelectedProduct(product)}
-              onDelete={onDeleteProduct}
-            />
-          ))}
+          {products.length ? (
+            <>
+              {products.map((product) => (
+                <ProductItem
+                  key={product._id}
+                  itemName={product.name}
+                  selected={selectedProduct._id === product._id}
+                  onClick={() => setSelectedProduct(product)}
+                  onDelete={onDeleteProduct}
+                />
+              ))}
+            </>
+          ) : (
+            <div className={classes.messageConatiner}>
+              <Typography variant="h6" style={{ color: "#808080" }}>
+                No product available.
+              </Typography>
+              <Typography variant="h6" style={{ color: "#808080" }}>
+                Create one now!
+              </Typography>
+            </div>
+          )}
         </div>
       </div>
       <div className={classes.right}>

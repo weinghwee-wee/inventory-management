@@ -39,8 +39,8 @@ const useStyles = makeStyles(() => ({
     borderWidth: 2,
     borderColor: "white",
     color: "white",
-    height: 40,
-    width: 40,
+    height: 25,
+    width: 25,
   },
   deleteButton: {
     marginLeft: 3,
@@ -48,8 +48,8 @@ const useStyles = makeStyles(() => ({
     borderWidth: 2,
     borderColor: "white",
     color: "white",
-    height: 40,
-    width: 40,
+    height: 25,
+    width: 25,
   },
   itemName: {
     flex: 1,
