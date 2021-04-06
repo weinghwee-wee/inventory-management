@@ -19,7 +19,7 @@ const CustomTooltip = ({ title, onClick }) => {
     <Tooltip
       title={title}
       onClick={() => {
-        onClick(true);
+        onClick();
       }}
     >
       <Fab color="primary" className={classes.absolute}>

@@ -31,3 +31,9 @@ export const deleteProduct = async (id) => {
 
   return result.data;
 }
+
+export const editProduct = async (id, updateObject) => {
+  const result = await axiosInstance.put(`/product/${id}`, updateObject);
+
+  return result.data;
+}

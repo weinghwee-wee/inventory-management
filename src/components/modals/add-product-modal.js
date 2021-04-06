@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -8,7 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { createProduct } from "../../api";
+import { createProduct, editProduct } from "../../api";
 import { uploadFile } from "../../firebase/firebase-utils";
 import { showModalAction } from "../../redux/actions";
 
@@ -16,7 +16,12 @@ const useStyles = makeStyles((theme) => ({
   uploadContainer: { marginTop: 10, display: "flex", alignItems: "center" },
 }));
 
-const AddProductModal = ({ visible, setVisible }) => {
+const AddProductModal = ({
+  details,
+  visible,
+  setVisible,
+  setSelectedProduct,
+}) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [name, setName] = useState("");
@@ -24,6 +29,14 @@ const AddProductModal = ({ visible, setVisible }) => {
   const [buyPrice, setBuyPrice] = useState(0.0);
   const [availableStock, setAvailableStock] = useState(0);
   const [selectedFile, setSelectedFile] = useState({});
+
+  useEffect(() => {
+    setName(details.name || "");
+    setSellPrice(details.sellPrice || 0.0);
+    setBuyPrice(details.buyPrice || 0.0);
+    setAvailableStock(details.availableStock || 0);
+    setSelectedFile({ name: details.imageName });
+  }, [details]);
 
   const onAdd = async () => {
     const imageUrl = await uploadFile(selectedFile);
@@ -49,6 +62,36 @@ const AddProductModal = ({ visible, setVisible }) => {
     closeModal();
   };
 
+  const onEdit = async () => {
+    let imageUrl;
+    let updateObject = {
+      name,
+      sellPrice,
+      buyPrice,
+      availableStock,
+    };
+
+    if (details.imageName !== selectedFile.name) {
+      imageUrl = await uploadFile(selectedFile);
+      updateObject.imageName = selectedFile.name;
+      updateObject.imageUrl = imageUrl;
+    }
+
+    const response = await editProduct(details._id, updateObject);
+    setSelectedProduct(response.result);
+
+    dispatch(
+      showModalAction(
+        "Successfully Edited Product",
+        `${name} is successfully edited.`,
+        null,
+        "Close"
+      )
+    );
+
+    closeModal();
+  };
+
   const closeModal = async () => {
     setSelectedFile({});
     setVisible(false);
@@ -65,7 +108,9 @@ const AddProductModal = ({ visible, setVisible }) => {
         closeModal();
       }}
     >
-      <DialogTitle id="form-dialog-title">Add New Product</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        {details.name ? `Edit ${details.name}` : "Add New Product"}
+      </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -73,6 +118,7 @@ const AddProductModal = ({ visible, setVisible }) => {
           id="name"
           label="Product Name"
           fullWidth
+          value={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
@@ -84,6 +130,7 @@ const AddProductModal = ({ visible, setVisible }) => {
           label="Sell Price"
           type="number"
           fullWidth
+          value={sellPrice}
           onChange={(e) => {
             setSellPrice(e.target.value);
           }}
@@ -95,6 +142,7 @@ const AddProductModal = ({ visible, setVisible }) => {
           label="Buy Price"
           type="number"
           fullWidth
+          value={buyPrice}
           onChange={(e) => {
             setBuyPrice(e.target.value);
           }}
@@ -107,6 +155,7 @@ const AddProductModal = ({ visible, setVisible }) => {
           type="number"
           inputProps={{ min: "0" }}
           fullWidth
+          value={availableStock}
           onChange={(e) => {
             setAvailableStock(e.target.value);
           }}
@@ -133,8 +182,8 @@ const AddProductModal = ({ visible, setVisible }) => {
         <Button onClick={closeModal} color="secondary">
           Cancel
         </Button>
-        <Button onClick={onAdd} color="primary">
-          Add
+        <Button onClick={details.name ? onEdit : onAdd} color="primary">
+          {details.name ? "Edit" : "Add"}
         </Button>
       </DialogActions>
     </Dialog>

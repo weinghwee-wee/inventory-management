@@ -62,7 +62,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ProductItem = ({ onDelete, onClick, itemName, selected }) => {
+const ProductItem = ({ onDelete, onEdit, onClick, itemName, selected }) => {
   const classes = useStyles();
 
   return (
@@ -78,7 +78,7 @@ const ProductItem = ({ onDelete, onClick, itemName, selected }) => {
       </Typography>
       {selected ? (
         <>
-          <IconButton className={classes.editButton}>
+          <IconButton className={classes.editButton} onClick={onEdit}>
             <EditIcon />
           </IconButton>
           <IconButton className={classes.deleteButton} onClick={onDelete}>

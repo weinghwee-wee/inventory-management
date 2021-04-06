@@ -124,7 +124,12 @@ const OrderScreen = () => {
   return (
     <div className={classes.container}>
       <AddOrderModal visible={addOrderModal} setVisible={setAddOrderModal} />
-      <CustomTooltip title="Add Order" onClick={setAddOrderModal} />
+      <CustomTooltip
+        title="Add Order"
+        onClick={() => {
+          setAddOrderModal(true);
+        }}
+      />
       <TableContainer style={{ boxShadow: "none" }} component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <colgroup>

@@ -196,11 +196,19 @@ const ProductScreen = () => {
   return (
     <div className={classes.container}>
       <AddProductModal
+        details={selectedProduct}
         visible={addProductModal}
         setVisible={setAddProductModal}
+        setSelectedProduct={setSelectedProduct}
       />
       <RestockModal visible={restockModal} setVisible={setRestockModal} />
-      <CustomTooltip title="Add Product" onClick={setAddProductModal} />
+      <CustomTooltip
+        title="Add Product"
+        onClick={() => {
+          setSelectedProduct({});
+          setAddProductModal(true);
+        }}
+      />
       <div className={classes.left}>
         <SearchBar
           className={classes.searchBar}
@@ -221,6 +229,9 @@ const ProductScreen = () => {
                   selected={selectedProduct._id === product._id}
                   onClick={() => setSelectedProduct(product)}
                   onDelete={onDeleteProduct}
+                  onEdit={() => {
+                    setAddProductModal(true);
+                  }}
                 />
               ))}
             </>
