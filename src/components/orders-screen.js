@@ -14,6 +14,8 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import { CustomTooltip } from "./common";
 import { AddOrderModal } from "./modals";
+import { getOrders } from "../api";
+import { formatDate } from "../utils";
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -81,18 +83,6 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
 const useStyles = makeStyles((theme) => ({
   container: {
     height: "80%",
@@ -108,9 +98,17 @@ const OrderScreen = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [addOrderModal, setAddOrderModal] = useState(false);
+  const [orders, setOrders] = useState([]);
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const fetchOrders = async () => {
+    const { result: orders } = await getOrders();
+
+    setOrders(orders);
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -143,24 +141,26 @@ const OrderScreen = () => {
           <TableHead>
             <TableRow>
               <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell align="right">Location</StyledTableCell>
-              <StyledTableCell align="right">Tel No</StyledTableCell>
-              <StyledTableCell align="right">Date</StyledTableCell>
-              <StyledTableCell align="right">Status</StyledTableCell>
-              <StyledTableCell align="right">Total (RM)</StyledTableCell>
+              <StyledTableCell align="center">Location</StyledTableCell>
+              <StyledTableCell align="center">Tel No</StyledTableCell>
+              <StyledTableCell align="center">Date</StyledTableCell>
+              <StyledTableCell align="center">Status</StyledTableCell>
+              <StyledTableCell align="center">Total (RM)</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.name}>
+            {orders.map((order) => (
+              <StyledTableRow key={order.name}>
                 <StyledTableCell component="th" scope="row">
-                  {row.name}
+                  {order.name}
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                <StyledTableCell align="right">{row.protein}</StyledTableCell>
-                <StyledTableCell align="right">{row.protein}</StyledTableCell>
+                <StyledTableCell align="center">{order.location}</StyledTableCell>
+                <StyledTableCell align="center">{order.phoneNo}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {formatDate(order.date)}
+                </StyledTableCell>
+                <StyledTableCell align="center">{order.status}</StyledTableCell>
+                <StyledTableCell align="center">{order.total}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
@@ -169,7 +169,7 @@ const OrderScreen = () => {
               <TablePagination
                 style={{ width: "100%" }}
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                count={rows.length}
+                count={orders.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

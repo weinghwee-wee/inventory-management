@@ -22,11 +22,11 @@ export const createOrder = async (
   return result.data;
 };
 
-// export const getProducts = async (name) => {
-//   const result = await axiosInstance.get("/products", { params: { name } });
+export const getOrders = async () => {
+  const result = await axiosInstance.get("/orders");
 
-//   return result.data;
-// };
+  return result.data;
+};
 
 // export const deleteProduct = async (id) => {
 //   const result = await axiosInstance.delete(`/product/${id}`);
