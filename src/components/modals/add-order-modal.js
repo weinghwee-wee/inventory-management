@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -45,55 +46,73 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddOrderModal = ({ visible, setVisible }) => {
+const AddOrderModal = ({
+  visible,
+  setVisible,
+  selectedOrder,
+  setSelectedOrder,
+}) => {
   const classes = useStyles();
   const [itemList, setItemList] = useState([]);
   const [itemCart, setItemCart] = useState({});
-  const [data, setData] = useState({
-    name: "",
-    location: "",
-    phoneNumber: "",
-  });
-  const [total, setTotal] = useState(0.00);
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [date, setDate] = useState("");
+  const [total, setTotal] = useState(0.0);
   const [shippingFee, setShippingFee] = useState(0);
 
   useEffect(() => {
-    setData({
-      name: "",
-      location: "",
-      phoneNumber: "",
-    });
-    setTotal(0);
-    setShippingFee(0);
+    const {
+      name,
+      location,
+      phoneNo,
+      total,
+      shippingFee,
+      date,
+      items,
+    } = selectedOrder;
+
+    if (items) {
+      setItemCart({ ...itemCart, ...items });
+    }
+
+    setName(name || "");
+    setLocation(location || "");
+    setPhoneNumber(phoneNo || "");
+    setDate(date ? moment(date).format("YYYY-MM-DD") : "");
+    setTotal(total || 0);
+    setShippingFee(shippingFee || 0);
   }, [visible]);
 
   const calculateTotal = () => {
-    let tempTotal = 0.00;
+    let tempTotal = 0.0;
 
     for (let key in itemCart) {
       const { sellPrice, amount } = itemCart[key];
       tempTotal = tempTotal + sellPrice * amount;
     }
 
-    setTotal(tempTotal)
-  };
-
-  const updateData = (key, value) => {
-    const temp = data;
-    temp[key] = value;
-    setData(temp);
+    setTotal(tempTotal);
   };
 
   const onAdd = async () => {
-    const { name, location, phoneNumber} = data;
+    const newOrder = await createOrder(
+      name,
+      location,
+      phoneNumber,
+      total,
+      itemCart,
+      shippingFee
+    );
 
-    const newOrder = await createOrder(name, location, phoneNumber, total, itemCart, shippingFee)
-
-    console.log(newOrder)
+    closeModal();
   };
 
   const closeModal = () => {
     setVisible(false);
+    setSelectedOrder({});
+    resetItemCart();
   };
 
   const buildInitialCart = (products) => {
@@ -108,6 +127,16 @@ const AddOrderModal = ({ visible, setVisible }) => {
       };
     });
     setItemCart(initialCart);
+  };
+
+  const resetItemCart = () => {
+    let tempItemCart = itemCart;
+
+    for (let key in tempItemCart) {
+      tempItemCart[key].amount = 0;
+    }
+
+    setItemCart(tempItemCart);
   };
 
   const setItemAmount = (itemId, amount) => {
@@ -142,8 +171,9 @@ const AddOrderModal = ({ visible, setVisible }) => {
           id="name"
           label="Name"
           fullWidth
+          value={name}
           onChange={(e) => {
-            updateData("name", e.target.value);
+            setName(e.target.value);
           }}
         />
         <TextField
@@ -152,8 +182,9 @@ const AddOrderModal = ({ visible, setVisible }) => {
           id="location"
           label="Location"
           fullWidth
+          value={location}
           onChange={(e) => {
-            updateData("location", e.target.value);
+            setLocation(e.target.value);
           }}
         />
         <TextField
@@ -162,8 +193,9 @@ const AddOrderModal = ({ visible, setVisible }) => {
           id="phonenumber"
           label="Phone Number"
           fullWidth
+          value={phoneNumber}
           onChange={(e) => {
-            updateData("phoneNumber", e.target.value);
+            setPhoneNumber(e.target.value);
           }}
         />
         <TextField
@@ -173,11 +205,12 @@ const AddOrderModal = ({ visible, setVisible }) => {
           id="date"
           type="date"
           fullWidth
+          value={date}
           InputLabelProps={{
             shrink: true,
           }}
           onChange={(e) => {
-            updateData("date", e.target.value);
+            setDate(e.target.value);
           }}
         />
         <div className={classes.itemContainer}>
@@ -201,6 +234,7 @@ const AddOrderModal = ({ visible, setVisible }) => {
                   type="number"
                   inputProps={{ min: "0" }}
                   defaultValue="0"
+                  value={itemCart[item.name] ? itemCart[item.name].amount : 0}
                   onChange={(e) => {
                     setItemAmount(item.name, parseInt(e.target.value));
                     calculateTotal();
@@ -218,6 +252,10 @@ const AddOrderModal = ({ visible, setVisible }) => {
           id="fee"
           type="number"
           fullWidth
+          value={shippingFee}
+          InputLabelProps={{
+            shrink: true,
+          }}
           onChange={(e) => {
             setShippingFee(parseFloat(e.target.value));
           }}

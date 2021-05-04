@@ -91,6 +91,9 @@ const useStyles = makeStyles((theme) => ({
     background: "#DCEBF3",
     borderRadius: 5,
   },
+  tableRow: {
+    cursor: "pointer",
+  },
 }));
 
 const OrderScreen = () => {
@@ -99,6 +102,7 @@ const OrderScreen = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [addOrderModal, setAddOrderModal] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState({});
 
   const fetchOrders = async () => {
     const { result: orders } = await getOrders();
@@ -121,7 +125,12 @@ const OrderScreen = () => {
 
   return (
     <div className={classes.container}>
-      <AddOrderModal visible={addOrderModal} setVisible={setAddOrderModal} />
+      <AddOrderModal
+        visible={addOrderModal}
+        setVisible={setAddOrderModal}
+        selectedOrder={selectedOrder}
+        setSelectedOrder={setSelectedOrder}
+      />
       <CustomTooltip
         title="Add Order"
         onClick={() => {
@@ -150,12 +159,23 @@ const OrderScreen = () => {
           </TableHead>
           <TableBody>
             {orders.map((order) => (
-              <StyledTableRow key={order.name}>
+              <StyledTableRow
+                key={order.name}
+                className={classes.tableRow}
+                onClick={() => {
+                  setAddOrderModal(true);
+                  setSelectedOrder(order);
+                }}
+              >
                 <StyledTableCell component="th" scope="row">
                   {order.name}
                 </StyledTableCell>
-                <StyledTableCell align="center">{order.location}</StyledTableCell>
-                <StyledTableCell align="center">{order.phoneNo}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {order.location}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {order.phoneNo}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                   {formatDate(order.date)}
                 </StyledTableCell>
