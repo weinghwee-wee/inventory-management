@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { getProducts, createOrder } from "../../api";
+import { showModalAction } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   itemContainer: {
@@ -61,6 +63,7 @@ const AddOrderModal = ({
   const [date, setDate] = useState("");
   const [total, setTotal] = useState(0.0);
   const [shippingFee, setShippingFee] = useState(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const {
@@ -97,13 +100,22 @@ const AddOrderModal = ({
   };
 
   const onAdd = async () => {
-    const newOrder = await createOrder(
+    await createOrder(
       name,
       location,
       phoneNumber,
       total,
       itemCart,
       shippingFee
+    );
+
+    dispatch(
+      showModalAction(
+        "Successfully Added Order",
+        `Created a new order for ${name} with total amount of RM${total}.`,
+        null,
+        "Close"
+      )
     );
 
     closeModal();

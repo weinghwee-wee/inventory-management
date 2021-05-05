@@ -98,11 +98,11 @@ const useStyles = makeStyles((theme) => ({
 
 const OrderScreen = () => {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [addOrderModal, setAddOrderModal] = useState(false);
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState({});
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const fetchOrders = async () => {
     const { result: orders } = await getOrders();
@@ -112,7 +112,7 @@ const OrderScreen = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [addOrderModal]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -158,9 +158,15 @@ const OrderScreen = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => (
+            {(rowsPerPage > 0
+              ? orders.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : orders
+            ).map((order) => (
               <StyledTableRow
-                key={order.name}
+                key={order._id}
                 className={classes.tableRow}
                 onClick={() => {
                   setAddOrderModal(true);
@@ -188,7 +194,7 @@ const OrderScreen = () => {
             <TableRow>
               <TablePagination
                 style={{ width: "100%" }}
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 25, { label: "All", value: -1 }]}
                 count={orders.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

@@ -84,9 +84,9 @@ function MainScreen(props) {
   };
 
   const renderContent = () => {
-    if (selectedScreen == "Products") {
+    if (selectedScreen === "Products") {
       return <ProductScreen />;
-    } else if (selectedScreen == "Orders") {
+    } else if (selectedScreen === "Orders") {
       return <OrderScreen />;
     } else {
       return null;
@@ -106,7 +106,7 @@ function MainScreen(props) {
         {screens.map((screen) => (
           <ListItem
             className={
-              selectedScreen == screen.name
+              selectedScreen === screen.name
                 ? classes.selectedListItem
                 : classes.normalListItem
             }
@@ -118,7 +118,7 @@ function MainScreen(props) {
           >
             <ListItemIcon
               className={
-                selectedScreen == screen.name
+                selectedScreen === screen.name
                   ? classes.selectedListText
                   : classes.normalListText
               }
@@ -127,7 +127,7 @@ function MainScreen(props) {
             </ListItemIcon>
             <ListItemText
               className={
-                selectedScreen == screen.name
+                selectedScreen === screen.name
                   ? classes.selectedListText
                   : classes.normalListText
               }
