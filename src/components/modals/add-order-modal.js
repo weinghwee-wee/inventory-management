@@ -10,7 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
-import { getProducts, createOrder } from "../../api";
+import { getProducts, createOrder, editOrder } from "../../api";
 import { showModalAction } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +46,20 @@ const useStyles = makeStyles((theme) => ({
   flexOne: {
     flex: 1,
   },
+  titleContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  redButton: {
+    marginRight: 24,
+    background: "#FF0000",
+  },
+  greenButton: {
+    marginRight: 24,
+    background: "#00FF21",
+  },
 }));
 
 const AddOrderModal = ({
@@ -63,6 +77,7 @@ const AddOrderModal = ({
   const [date, setDate] = useState("");
   const [total, setTotal] = useState(0.0);
   const [shippingFee, setShippingFee] = useState(0);
+  const [status, setStatus] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -74,6 +89,7 @@ const AddOrderModal = ({
       shippingFee,
       date,
       items,
+      status,
     } = selectedOrder;
 
     if (items) {
@@ -86,6 +102,7 @@ const AddOrderModal = ({
     setDate(date ? moment(date).format("YYYY-MM-DD") : "");
     setTotal(total || 0);
     setShippingFee(shippingFee || 0);
+    setStatus(status || "");
   }, [visible]);
 
   const calculateTotal = () => {
@@ -164,6 +181,19 @@ const AddOrderModal = ({
     buildInitialCart(products);
   };
 
+  const onStatusClick = async () => {
+    let newStatus;
+
+    if (status === "New") {
+      newStatus = "Completed";
+    } else {
+      newStatus = "New";
+    }
+
+    setStatus(newStatus);
+    await editOrder(selectedOrder._id, { status: newStatus });
+  };
+
   useEffect(() => {
     fetchProduct();
   }, []);
@@ -175,7 +205,20 @@ const AddOrderModal = ({
         closeModal();
       }}
     >
-      <DialogTitle id="form-dialog-title">Add New Order</DialogTitle>
+      <div className={classes.titleContainer}>
+        <DialogTitle id="form-dialog-title">Add New Order</DialogTitle>
+        {status.length ? (
+          <Button
+            variant="contained"
+            className={
+              status === "New" ? classes.redButton : classes.greenButton
+            }
+            onClick={onStatusClick}
+          >
+            {status}
+          </Button>
+        ) : null}
+      </div>
       <DialogContent>
         <TextField
           autoFocus
@@ -286,7 +329,7 @@ const AddOrderModal = ({
           Cancel
         </Button>
         <Button onClick={onAdd} color="primary">
-          Add
+          {selectedOrder.name ? "Edit" : "Add"}
         </Button>
       </DialogActions>
     </Dialog>

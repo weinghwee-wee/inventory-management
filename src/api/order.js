@@ -17,8 +17,6 @@ export const createOrder = async (
     shippingFee,
   });
 
-  console.log(result);
-
   return result.data;
 };
 
@@ -34,8 +32,8 @@ export const getOrders = async () => {
 //   return result.data;
 // }
 
-// export const editProduct = async (id, updateObject) => {
-//   const result = await axiosInstance.put(`/product/${id}`, updateObject);
+export const editOrder = async (id, updateObject) => {
+  const result = await axiosInstance.put(`/order/${id}`, updateObject);
 
-//   return result.data;
-// }
+  return result.data;
+}
