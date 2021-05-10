@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import _ from "lodash";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -117,12 +118,14 @@ const AddOrderModal = ({
   };
 
   const onAdd = async () => {
-    await createOrder(
+    const clearedItemCart = removeEmptyItem();
+
+    const response = await createOrder(
       name,
       location,
       phoneNumber,
       total,
-      itemCart,
+      clearedItemCart,
       shippingFee
     );
 
@@ -192,6 +195,45 @@ const AddOrderModal = ({
 
     setStatus(newStatus);
     await editOrder(selectedOrder._id, { status: newStatus });
+  };
+
+  const onEditClick = async (orderId) => {
+    const clearedItemCart = removeEmptyItem();
+
+    const newBody = {
+      name,
+      location,
+      phoneNo: phoneNumber,
+      total,
+      shippingFee,
+      date,
+      items: clearedItemCart,
+    };
+
+    await editOrder(selectedOrder._id, newBody);
+
+    dispatch(
+      showModalAction(
+        "Successfully Edited Order",
+        `Order is updated.`,
+        null,
+        "Close"
+      )
+    );
+
+    closeModal();
+  };
+
+  const removeEmptyItem = () => {
+    const tempItemCart = _.cloneDeep(itemCart);
+
+    for (let key in tempItemCart) {
+      if (tempItemCart[key].amount === 0) {
+        delete tempItemCart[key];
+      }
+    }
+
+    return tempItemCart;
   };
 
   useEffect(() => {
@@ -328,7 +370,10 @@ const AddOrderModal = ({
         <Button onClick={closeModal} color="secondary">
           Cancel
         </Button>
-        <Button onClick={onAdd} color="primary">
+        <Button
+          onClick={selectedOrder.name ? onEditClick : onAdd}
+          color="primary"
+        >
           {selectedOrder.name ? "Edit" : "Add"}
         </Button>
       </DialogActions>
