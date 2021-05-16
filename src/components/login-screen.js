@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
     backgroundImage: "url(" + process.env.PUBLIC_URL + "/background.jpg" + ")",
   },
+  link: {
+    textDecoration: "none"
+  }
 }));
 
 const LoginScreen = () => {
@@ -51,8 +54,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
 
   const onLogin = () => {
-    console.log(email, password)
-  }
+    console.log(email, password);
+  };
 
   return (
     <div className={classes.container}>
@@ -102,13 +105,13 @@ const LoginScreen = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link className={classes.link} to="/">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link className={classes.link} to="/register">
+                  Don't have an account? Register now!
                 </Link>
               </Grid>
             </Grid>
