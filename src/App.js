@@ -7,7 +7,8 @@ import {
   Redirect,
 } from "react-router-dom";
 import {
-  MainScreen
+  MainScreen,
+  LoginScreen
 } from "./components"
 
 const PrivateRoute = ({ component: Component, path, auth, ...rest }) => {
@@ -29,7 +30,8 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={MainScreen} />
+        <Route exact path="/" component={LoginScreen} />
+        <Route exact path="/main" component={MainScreen} />
         {/* <Route exact path="/register" component={RegisterScreen} />
         <PrivateRoute exact auth={!!id} path="/main" component={MainScreen} /> */}
       </Switch>
