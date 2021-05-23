@@ -6,9 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { showModalAction } from "../redux/actions";
-import { register } from "../services/api";
 import { validateEmail } from "../utils";
+import { registerUser } from "../services/logic";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -59,12 +58,9 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
 
   const onRegister = async () => {
-    const response = await register(email, name, password);
-
-    if (!response.success) {
-      dispatch(
-        showModalAction("Registration Failed", response.error, null, "Close")
-      );
+    const response = await registerUser(email, name, password);
+    if (response.success) {
+      history.push('/main')
     }
   };
 
