@@ -4,7 +4,11 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showModalAction } from "../redux/actions";
+import { register } from "../api";
+import { validateEmail } from "../utils";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,18 +45,27 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: "url(" + process.env.PUBLIC_URL + "/background.jpg" + ")",
   },
   link: {
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 }));
 
 const RegisterScreen = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const [emailError, setEmailError] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  const onRegister = () => {
-    console.log(email, name, password);
+  const onRegister = async () => {
+    const response = await register(email, name, password);
+
+    if (!response.success) {
+      dispatch(
+        showModalAction("Registration Failed", response.error, null, "Close")
+      );
+    }
   };
 
   return (
@@ -64,6 +77,8 @@ const RegisterScreen = () => {
           </Typography>
           <form className={classes.form} noValidate>
             <TextField
+              error={emailError}
+              helperText={emailError ? "Invalid email address." : ""}
               variant="outlined"
               margin="normal"
               required
@@ -74,6 +89,7 @@ const RegisterScreen = () => {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
+                setEmailError(!validateEmail(e.target.value))
               }}
             />
             <TextField
@@ -104,6 +120,7 @@ const RegisterScreen = () => {
               }}
             />
             <Button
+              disabled={!(name && email && password)}
               fullWidth
               variant="contained"
               className={classes.submit}
@@ -112,7 +129,9 @@ const RegisterScreen = () => {
               Register
             </Button>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Link className={classes.link} to="/">Already have account? Log In</Link>
+              <Link className={classes.link} to="/">
+                Already have account? Log In
+              </Link>
             </div>
           </form>
         </div>
