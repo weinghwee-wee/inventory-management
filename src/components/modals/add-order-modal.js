@@ -11,7 +11,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
-import { getProducts, createOrder, editOrder } from "../../api";
+import { getProducts, createOrder, editOrder } from "../../services/api";
 import { showModalAction } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({

@@ -14,7 +14,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import { CustomTooltip } from "./common";
 import { AddOrderModal } from "./modals";
-import { getOrders } from "../api";
+import { getOrders } from "../services/api";
 import { formatDate } from "../utils";
 
 const useStyles1 = makeStyles((theme) => ({

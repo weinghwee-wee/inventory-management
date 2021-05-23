@@ -7,7 +7,7 @@ import Container from "@material-ui/core/Container";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showModalAction } from "../redux/actions";
-import { register } from "../api";
+import { register } from "../services/api";
 import { validateEmail } from "../utils";
 
 const useStyles = makeStyles((theme) => ({

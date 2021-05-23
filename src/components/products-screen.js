@@ -10,7 +10,7 @@ import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import Divider from "@material-ui/core/Divider";
 import { AddProductModal, RestockModal } from "./modals";
 import { CustomTooltip } from "./common";
-import { getProducts, deleteProduct } from "../api";
+import { getProducts, deleteProduct } from "../services/api";
 import { showModalAction } from "../redux/actions";
 import { deleteFile } from "../firebase/firebase-utils";
 

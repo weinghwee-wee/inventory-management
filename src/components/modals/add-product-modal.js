@@ -8,7 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { createProduct, editProduct } from "../../api";
+import { createProduct, editProduct } from "../../services/api";
 import { uploadFile } from "../../firebase/firebase-utils";
 import { showModalAction } from "../../redux/actions";
 
