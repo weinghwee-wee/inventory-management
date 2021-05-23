@@ -7,7 +7,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { loginUser } from "../services/logic";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,17 +45,22 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: "url(" + process.env.PUBLIC_URL + "/background.jpg" + ")",
   },
   link: {
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 }));
 
 const LoginScreen = () => {
+  const history = useHistory();
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = () => {
-    console.log(email, password);
+  const onLogin = async () => {
+    const response = await loginUser(email, password);
+
+    if (response.success) {
+      history.push("/main");
+    }
   };
 
   return (
