@@ -6,11 +6,7 @@ import {
   Switch,
   Redirect,
 } from "react-router-dom";
-import {
-  MainScreen,
-  LoginScreen,
-  RegisterScreen
-} from "./components"
+import { MainScreen, LoginScreen, RegisterScreen } from "./components";
 
 const PrivateRoute = ({ component: Component, path, auth, ...rest }) => {
   return (
@@ -28,12 +24,19 @@ const PrivateRoute = ({ component: Component, path, auth, ...rest }) => {
 };
 
 const App = () => {
+  const { token } = useSelector(state => state);
+
   return (
     <Router>
       <Switch>
         <Route exact path="/" component={LoginScreen} />
         <Route exact path="/register" component={RegisterScreen} />
-        <Route exact path="/main" component={MainScreen} />
+        <PrivateRoute
+          exact
+          path="/main"
+          component={MainScreen}
+          auth={!!token}
+        />
         {/* <Route exact path="/register" component={RegisterScreen} />
         <PrivateRoute exact auth={!!id} path="/main" component={MainScreen} /> */}
       </Switch>
