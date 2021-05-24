@@ -1,7 +1,7 @@
-import axiosInstance from "./axios-instance";
+import { axiosPublicInstance } from "./axios-instance";
 
 export const register = async (email, name, password) => {
-  const result = await axiosInstance.post("/user", {
+  const result = await axiosPublicInstance.post("/user", {
     email,
     name,
     password,

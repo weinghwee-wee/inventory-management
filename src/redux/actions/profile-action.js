@@ -1,4 +1,4 @@
-import { SET_PROFILE } from "../types";
+import { SET_PROFILE, CLEAR_PROFILE } from "../types";
 
 export const setProfileAction = (id, name, email) => {
   return {
@@ -8,5 +8,11 @@ export const setProfileAction = (id, name, email) => {
       name,
       email,
     },
+  };
+};
+
+export const clearProfileAction = () => {
+  return {
+    type: CLEAR_PROFILE,
   };
 };

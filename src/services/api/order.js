@@ -1,4 +1,4 @@
-import axiosInstance from "./axios-instance";
+import { axiosInstance } from "./axios-instance";
 
 export const createOrder = async (
   name,
@@ -36,4 +36,4 @@ export const editOrder = async (id, updateObject) => {
   const result = await axiosInstance.put(`/order/${id}`, updateObject);
 
   return result.data;
-}
+};

@@ -1,22 +1,51 @@
 import axios from "axios";
+import { logoutUser } from "../logic";
+import store from "../../redux/store";
 
 /**
  * @deprecated
  */
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: "http://localhost:3000",
 });
 
+export const axiosPublicInstance = axios.create({
+  baseURL: "http://localhost:3000",
+});
+
+// check for token
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const authenticated = checkAuth();
+
+    // call logout when the accesstoken is expired
+    if (!authenticated) {
+      // call logout
+      await logoutUser();
+
+      throw new Error("Unauthorized");
+    } else {
+      // set the new accesstoken to the request headers
+      const { token } = store.getState();
+      config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    }
+  },
+  (err) => {
+    return Promise.reject(err);
+  }
+);
+
 axiosInstance.interceptors.response.use(
   (res) => {
-    res.data.success = true
-    return res
+    res.data.success = true;
+    return res;
   },
   async (err) => {
     if (err.response) {
-      err.response.data.success = false
-      return err.response
+      err.response.data.success = false;
+      return err.response;
     }
 
     // show error modal (Network error etc)
@@ -25,10 +54,40 @@ axiosInstance.interceptors.response.use(
     return {
       data: {
         message: err.message,
-        success: false
+        success: false,
       },
     };
   }
 );
 
-export default axiosInstance;
+axiosPublicInstance.interceptors.response.use(
+  (res) => {
+    res.data.success = true;
+    return res;
+  },
+  async (err) => {
+    if (err.response) {
+      err.response.data.success = false;
+      return err.response;
+    }
+
+    // show error modal (Network error etc)
+    // store.dispatch(showModalAction("Error", err.message, null, "Close"));
+
+    return {
+      data: {
+        message: err.message,
+        success: false,
+      },
+    };
+  }
+);
+
+const checkAuth = async () => {
+  const { token } = store.getState();
+  if (!token) {
+    return false;
+  }
+
+  return true;
+};
