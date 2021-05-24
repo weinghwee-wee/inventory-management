@@ -14,9 +14,14 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { ProductScreen, OrderScreen } from "./index";
+import { logoutUser } from "../services/logic";
+import { showModalAction } from "../redux/actions";
 
 const drawerWidth = 240;
 
@@ -60,7 +65,14 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     background: "white",
   },
-  nav: { background: "black", height: "100%", padding: 5 },
+  nav: {
+    background: "black",
+    height: "100%",
+    padding: 5,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
   normalListItem: { background: "black" },
   selectedListItem: {
     background: "yellow",
@@ -70,9 +82,14 @@ const useStyles = makeStyles((theme) => ({
   },
   normalListText: { color: "white" },
   selectedListText: { color: "black" },
+  textYellow: {
+    color: "yellow",
+  },
 }));
 
 function MainScreen(props) {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -100,42 +117,68 @@ function MainScreen(props) {
 
   const drawer = (
     <div className={classes.nav}>
-      <div className={classes.toolbar}></div>
-      <Divider />
-      <List>
-        {screens.map((screen) => (
-          <ListItem
-            className={
-              selectedScreen === screen.name
-                ? classes.selectedListItem
-                : classes.normalListItem
-            }
-            button
-            key={screen.name}
-            onClick={() => {
-              setSelectedScreen(screen.name);
-            }}
-          >
-            <ListItemIcon
+      <div>
+        <div className={classes.toolbar}></div>
+        <Divider />
+        <List>
+          {screens.map((screen) => (
+            <ListItem
               className={
                 selectedScreen === screen.name
-                  ? classes.selectedListText
-                  : classes.normalListText
+                  ? classes.selectedListItem
+                  : classes.normalListItem
               }
+              button
+              key={screen.name}
+              onClick={() => {
+                setSelectedScreen(screen.name);
+              }}
             >
-              {screen.icon}
-            </ListItemIcon>
-            <ListItemText
-              className={
-                selectedScreen === screen.name
-                  ? classes.selectedListText
-                  : classes.normalListText
+              <ListItemIcon
+                className={
+                  selectedScreen === screen.name
+                    ? classes.selectedListText
+                    : classes.normalListText
+                }
+              >
+                {screen.icon}
+              </ListItemIcon>
+              <ListItemText
+                className={
+                  selectedScreen === screen.name
+                    ? classes.selectedListText
+                    : classes.normalListText
+                }
+                primary={screen.name}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </div>
+      <ListItem
+        style={{ marginBottom: 20 }}
+        button
+        key="log out"
+        onClick={() => {
+          dispatch(
+            showModalAction(
+              "Log Out",
+              "Are you sure you want to log out?",
+              "Log Out",
+              "Cancel",
+              async () => {
+                await logoutUser();
+                history.push("/");
               }
-              primary={screen.name}
-            />
-          </ListItem>
-        ))}
-      </List>
+            )
+          );
+        }}
+      >
+        <ListItemIcon className={classes.textYellow}>
+          <ExitToAppIcon />
+        </ListItemIcon>
+        <ListItemText className={classes.textYellow} primary="Log Out" />
+      </ListItem>
     </div>
   );
 

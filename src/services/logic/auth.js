@@ -30,6 +30,6 @@ export const logoutUser = async () => {
   const { token } = store.getState();
   await logout(token);
 
-  store.dispatch(clearTokenAction);
-  store.dispatch(clearProfileAction);
+  store.dispatch(clearTokenAction());
+  store.dispatch(clearProfileAction());
 };
