@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import _ from "lodash";
+import _, { forEach } from "lodash";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -82,19 +82,15 @@ const AddOrderModal = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const {
-      name,
-      location,
-      phoneNo,
-      total,
-      shippingFee,
-      date,
-      items,
-      status,
-    } = selectedOrder;
+    fetchProduct();
+  }, []);
+
+  useEffect(() => {
+    const { name, location, phoneNo, total, shippingFee, date, items, status } =
+      selectedOrder;
 
     if (items) {
-      setItemCart({ ...itemCart, ...items });
+      setItemCart({ ...itemCart, ...buildInitialCart(items) });
     }
 
     setName(name || "");
@@ -129,6 +125,8 @@ const AddOrderModal = ({
       shippingFee
     );
 
+    console.log(response)
+
     dispatch(
       showModalAction(
         "Successfully Added Order",
@@ -151,14 +149,16 @@ const AddOrderModal = ({
     let initialCart = {};
 
     products.forEach((product) => {
-      const { name, sellPrice } = product;
+      const { name, sellPrice, _id, amount } = product;
 
       initialCart[name] = {
+        _id,
         sellPrice,
-        amount: 0,
+        amount: amount || 0,
       };
     });
-    setItemCart(initialCart);
+
+    return initialCart;
   };
 
   const resetItemCart = () => {
@@ -180,8 +180,8 @@ const AddOrderModal = ({
 
   const fetchProduct = async () => {
     const { result: products } = await getProducts();
-    setItemList(products);
-    buildInitialCart(products);
+    setItemList(products || []);
+    setItemCart(buildInitialCart(products));
   };
 
   const onStatusClick = async () => {
@@ -233,12 +233,20 @@ const AddOrderModal = ({
       }
     }
 
-    return tempItemCart;
-  };
+    let itemArray = [];
 
-  useEffect(() => {
-    fetchProduct();
-  }, []);
+    for (let key in tempItemCart) {
+      const { _id, sellPrice, amount } = tempItemCart[key];
+      itemArray.push({
+        name: key,
+        _id,
+        sellPrice,
+        amount,
+      });
+    }
+
+    return itemArray;
+  };
 
   return (
     <Dialog
