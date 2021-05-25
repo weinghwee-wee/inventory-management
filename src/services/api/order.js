@@ -26,11 +26,11 @@ export const getOrders = async () => {
   return result.data;
 };
 
-// export const deleteProduct = async (id) => {
-//   const result = await axiosInstance.delete(`/product/${id}`);
+export const deleteOrder = async (id) => {
+  const result = await axiosInstance.delete(`/order/${id}`);
 
-//   return result.data;
-// }
+  return result.data;
+}
 
 export const editOrder = async (id, updateObject) => {
   const result = await axiosInstance.put(`/order/${id}`, updateObject);

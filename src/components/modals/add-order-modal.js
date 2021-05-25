@@ -10,8 +10,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import DeleteIcon from '@material-ui/icons/Delete';
 import Typography from "@material-ui/core/Typography";
-import { getProducts, createOrder, editOrder } from "../../services/api";
+import { getProducts, createOrder, editOrder, deleteOrder } from "../../services/api";
 import { showModalAction } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,14 +54,22 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  redButton: {
-    marginRight: 24,
-    background: "#FF0000",
-  },
   greenButton: {
     marginRight: 24,
     background: "#00FF21",
   },
+  yellowButton: {
+    marginRight: 24,
+    background: "yellow",
+  },
+  dialogActions: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  deleteIcon: {
+    color: "red",
+    cursor: "pointer"
+  }
 }));
 
 const AddOrderModal = ({
@@ -124,8 +133,6 @@ const AddOrderModal = ({
       clearedItemCart,
       shippingFee
     );
-
-    console.log(response)
 
     dispatch(
       showModalAction(
@@ -194,6 +201,7 @@ const AddOrderModal = ({
     }
 
     setStatus(newStatus);
+
     await editOrder(selectedOrder._id, { status: newStatus });
   };
 
@@ -261,7 +269,7 @@ const AddOrderModal = ({
           <Button
             variant="contained"
             className={
-              status === "New" ? classes.redButton : classes.greenButton
+              status === "New" ? classes.greenButton : classes.yellowButton
             }
             onClick={onStatusClick}
           >
@@ -374,16 +382,38 @@ const AddOrderModal = ({
           <Typography>{(total + shippingFee).toFixed(2)}</Typography>
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={closeModal} color="secondary">
-          Cancel
-        </Button>
-        <Button
-          onClick={selectedOrder.name ? onEditClick : onAdd}
-          color="primary"
-        >
-          {selectedOrder.name ? "Edit" : "Add"}
-        </Button>
+      <DialogActions className={classes.dialogActions}>
+        <div>
+          {selectedOrder.name ? (
+            <DeleteIcon
+              className={classes.deleteIcon}
+              onClick={() => {
+                dispatch(
+                  showModalAction(
+                    "Delete Order",
+                    "Are you sure you want to delete this order?",
+                    "Yes",
+                    "Cancel",
+                    async () => {
+                      await deleteOrder(selectedOrder._id);
+                      closeModal();
+                    }
+                  )
+                );
+              }} />
+          ) : null}
+        </div>
+        <div>
+          <Button onClick={closeModal} color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={selectedOrder.name ? onEditClick : onAdd}
+            color="primary"
+          >
+            {selectedOrder.name ? "Edit" : "Add"}
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
   );
