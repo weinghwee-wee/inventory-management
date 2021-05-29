@@ -56,7 +56,7 @@ const RestockModal = ({ productId, visible, setVisible, setSelectedProduct }) =>
         <Button onClick={closeModal} color="secondary">
           Cancel
         </Button>
-        <Button onClick={onRestock} color="primary">
+        <Button onClick={onRestock} color="primary" disabled={amount ? false : true}>
           Restock
         </Button>
       </DialogActions>

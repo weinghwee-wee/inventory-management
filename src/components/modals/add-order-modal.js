@@ -410,6 +410,7 @@ const AddOrderModal = ({
           <Button
             onClick={selectedOrder.name ? onEditClick : onAdd}
             color="primary"
+            disabled={!(name && location && phoneNumber && date && removeEmptyItem().length)}
           >
             {selectedOrder.name ? "Edit" : "Add"}
           </Button>
