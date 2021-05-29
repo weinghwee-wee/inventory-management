@@ -264,7 +264,7 @@ const AddOrderModal = ({
       }}
     >
       <div className={classes.titleContainer}>
-        <DialogTitle id="form-dialog-title">Add New Order</DialogTitle>
+        <DialogTitle id="form-dialog-title">{selectedOrder.name ? "Edit Order" : "Add New Order"}</DialogTitle>
         {status.length ? (
           <Button
             variant="contained"

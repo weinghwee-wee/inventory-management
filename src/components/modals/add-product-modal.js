@@ -28,7 +28,7 @@ const AddProductModal = ({
   const [sellPrice, setSellPrice] = useState(0.0);
   const [buyPrice, setBuyPrice] = useState(0.0);
   const [availableStock, setAvailableStock] = useState(0);
-  const [selectedFile, setSelectedFile] = useState({});
+  const [selectedFile, setSelectedFile] = useState({ name: "" });
 
   useEffect(() => {
     setName(details.name || "");
@@ -93,12 +93,12 @@ const AddProductModal = ({
   };
 
   const closeModal = async () => {
-    setSelectedFile({});
+    setSelectedFile({ name: "" });
     setVisible(false);
   };
 
   const onFileChange = async (event) => {
-    setSelectedFile(event.target.files[0]);
+    setSelectedFile(event.target.files[0] || { name: details.imageName || "" });
   };
 
   return (
@@ -182,7 +182,11 @@ const AddProductModal = ({
         <Button onClick={closeModal} color="secondary">
           Cancel
         </Button>
-        <Button onClick={details.name ? onEdit : onAdd} color="primary">
+        <Button
+          onClick={details.name ? onEdit : onAdd}
+          color="primary"
+          disabled={!(name && sellPrice && buyPrice && availableStock && selectedFile.name)}
+        >
           {details.name ? "Edit" : "Add"}
         </Button>
       </DialogActions>
