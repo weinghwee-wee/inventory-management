@@ -188,7 +188,7 @@ const AddOrderModal = ({
   const fetchProduct = async () => {
     const { result: products } = await getProducts();
     setItemList(products || []);
-    setItemCart(buildInitialCart(products));
+    setItemCart(buildInitialCart(products || []));
   };
 
   const onStatusClick = async () => {

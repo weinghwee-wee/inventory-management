@@ -5,12 +5,31 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import { useDispatch } from "react-redux";
+import { showModalAction } from "../../redux/actions";
+import { restockProduct } from "../../services/api";
 
-const RestockModal = ({visible, setVisible}) => {
+const RestockModal = ({ productId, visible, setVisible, setSelectedProduct }) => {
+  const dispatch = useDispatch();
   const [amount, setAmount] = useState(0);
 
   const closeModal = () => {
     setVisible(false);
+  };
+
+  const onRestock = async () => {
+    const { result: updatedProduct } = await restockProduct(productId, amount);
+    setSelectedProduct(updatedProduct);
+    closeModal();
+
+    dispatch(
+      showModalAction(
+        `Successfully Restock Product ${updatedProduct.name}`,
+        `${updatedProduct.name} is successfully restocked by ${amount}.`,
+        null,
+        "Close"
+      )
+    );
   };
 
   return (
@@ -29,14 +48,15 @@ const RestockModal = ({visible, setVisible}) => {
           label="Amount"
           type="number"
           fullWidth
-          inputProps={{ min: "0"}}
+          inputProps={{ min: "0" }}
+          onChange={(e) => { setAmount(e.target.value); }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={closeModal} color="secondary">
           Cancel
         </Button>
-        <Button onClick={closeModal} color="primary">
+        <Button onClick={onRestock} color="primary">
           Restock
         </Button>
       </DialogActions>

@@ -37,3 +37,12 @@ export const editProduct = async (id, updateObject) => {
 
   return result.data;
 };
+
+export const restockProduct = async (id, amount) => {
+  const result = await axiosInstance.post('/restock', {
+    id,
+    amount
+  });
+
+  return result.data;
+};

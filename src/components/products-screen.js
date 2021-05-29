@@ -200,7 +200,12 @@ const ProductScreen = () => {
         setVisible={setAddProductModal}
         setSelectedProduct={setSelectedProduct}
       />
-      <RestockModal visible={restockModal} setVisible={setRestockModal} />
+      <RestockModal
+        productId={selectedProduct._id}
+        visible={restockModal}
+        setVisible={setRestockModal}
+        setSelectedProduct={setSelectedProduct}
+      />
       <CustomTooltip
         title="Add Product"
         onClick={() => {
@@ -235,15 +240,15 @@ const ProductScreen = () => {
               ))}
             </>
           ) : (
-            <div className={classes.messageConatiner}>
-              <Typography variant="h6" style={{ color: "#808080" }}>
-                No product available.
+              <div className={classes.messageConatiner}>
+                <Typography variant="h6" style={{ color: "#808080" }}>
+                  No product available.
               </Typography>
-              <Typography variant="h6" style={{ color: "#808080" }}>
-                Create one now!
+                <Typography variant="h6" style={{ color: "#808080" }}>
+                  Create one now!
               </Typography>
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </div>
       <div className={classes.right}>
@@ -278,14 +283,14 @@ const ProductScreen = () => {
                 <ProductDetail title="stock" description={availableStock} />
               </div>
               <Divider className={classes.divider} />
-              <div className={classes.detailsContainer}>
+              {/* <div className={classes.detailsContainer}>
                 <ProductDetail title="unit sold" description={totalSold} />
                 <ProductDetail
                   title="total unit"
                   description={availableStock + totalSold}
                 />
                 <ProductDetail title="" description="" />
-              </div>
+              </div> */}
             </Paper>
           </>
         ) : null}
