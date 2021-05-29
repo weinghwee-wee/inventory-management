@@ -7,11 +7,11 @@ import store from "../../redux/store";
  */
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.REACT_APP_BACKEND_URL,
 });
 
 export const axiosPublicInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.REACT_APP_BACKEND_URL,
 });
 
 // check for token

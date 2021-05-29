@@ -109,12 +109,12 @@ const LoginScreen = () => {
             >
               Login
             </Button>
-            <Grid container>
-              <Grid item xs>
+            <Grid container style={{ display: "flex", justifyContent: "center" }}>
+              {/* <Grid item xs>
                 <Link className={classes.link} to="/">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link className={classes.link} to="/register">
                   Don't have an account? Register now!
